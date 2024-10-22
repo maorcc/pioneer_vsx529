@@ -5,7 +5,8 @@ import time
 
 import voluptuous as vol
 
-from homeassistant.components.media_player import MediaPlayerDevice, MediaPlayerEntityFeature, PLATFORM_SCHEMA
+
+from homeassistant.components.media_player import MediaPlayerEntity, MediaPlayerEntityFeature, PLATFORM_SCHEMA
 from homeassistant.const import (
     CONF_HOST,
     CONF_NAME,
@@ -29,7 +30,8 @@ DEFAULT_SOURCES = {}
 DATA_PIONEER = 'pioneer'
 
 
-MAX_VOLUME = 150
+#MAX_VOLUME = 150
+MAX_VOLUME = 100
 MAX_SOURCE_NUMBERS = 60
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -65,7 +67,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 
 
-class PioneerDevice(MediaPlayerDevice):
+class PioneerDevice(MediaPlayerEntity):
     """Representation of a Pioneer device."""
     _attr_supported_features = (
         MediaPlayerEntityFeature.SELECT_SOURCE
@@ -121,7 +123,7 @@ class PioneerDevice(MediaPlayerDevice):
                     _LOGGER.info("Connected to %s:%d", self._host, self._port)
                 except:
                     _LOGGER.error("No connection to %s:%d, retry in 30s", \
-                        self.ip, self.port)
+                        self._host, self.port)
                     await asyncio.sleep(30)
                     continue
 
