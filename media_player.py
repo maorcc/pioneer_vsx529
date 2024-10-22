@@ -5,22 +5,7 @@ import time
 
 import voluptuous as vol
 
-from homeassistant.const import (
-    ATTR_ENTITY_ID, CONF_HOST, CONF_NAME, CONF_PORT, STATE_OFF, STATE_ON,
-    EVENT_HOMEASSISTANT_STOP
-)
-
-
-from homeassistant.components.media_player import MediaPlayerDevice, PLATFORM_SCHEMA
-from homeassistant.components.media_player.const import (
-    SUPPORT_SELECT_SOURCE,
-    SUPPORT_TURN_OFF,
-    SUPPORT_TURN_ON,
-    SUPPORT_VOLUME_MUTE,
-    SUPPORT_VOLUME_SET,
-    SUPPORT_VOLUME_STEP
-
-)
+from homeassistant.components.media_player import MediaPlayerDevice, MediaPlayerEntityFeature, PLATFORM_SCHEMA
 from homeassistant.const import (
     CONF_HOST,
     CONF_NAME,
@@ -28,6 +13,7 @@ from homeassistant.const import (
     CONF_TIMEOUT,
     STATE_OFF,
     STATE_ON,
+    EVENT_HOMEASSISTANT_STOP
 )
 import homeassistant.helpers.config_validation as cv
 
@@ -42,14 +28,6 @@ DEFAULT_SOURCES = {}
 
 DATA_PIONEER = 'pioneer'
 
-SUPPORT_PIONEER = (
-    SUPPORT_VOLUME_SET
-    | SUPPORT_VOLUME_MUTE
-    | SUPPORT_TURN_ON
-    | SUPPORT_TURN_OFF
-    | SUPPORT_SELECT_SOURCE
-    | SUPPORT_VOLUME_STEP
-)
 
 MAX_VOLUME = 150
 MAX_SOURCE_NUMBERS = 60
@@ -89,6 +67,14 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 class PioneerDevice(MediaPlayerDevice):
     """Representation of a Pioneer device."""
+    _attr_supported_features = (
+        MediaPlayerEntityFeature.SELECT_SOURCE
+        | MediaPlayerEntityFeature.TURN_OFF
+        | MediaPlayerEntityFeature.TURN_ON
+        | MediaPlayerEntityFeature.VOLUME_MUTE
+        | MediaPlayerEntityFeature.VOLUME_SET
+        | MediaPlayerEntityFeature.VOLUME_STEP
+    )
 
     def __init__(self, hass, name, host, port, timeout, sources):
         """Initialize the Pioneer device."""
@@ -262,7 +248,7 @@ class PioneerDevice(MediaPlayerDevice):
     @property
     def supported_features(self):
         """Flag media player features that are supported."""
-        return SUPPORT_PIONEER
+        return self._attr_supported_features
 
     @property
     def source(self):
