@@ -278,7 +278,7 @@ class PioneerDevice(MediaPlayerEntity):
         """Set volume level, range 0..1."""
         # 60dB max
 #        while (self._volume != volume)
-        _LOGGER.warning("Self: %f %f %d", self._volume,  volume, (self._volume - volume)* MAX_VOLUME/2)
+        _LOGGER.info("Self: %f %f %d", self._volume,  volume, (self._volume - volume)* MAX_VOLUME/2)
         
         for x in range(abs(round((self._volume - volume)* MAX_VOLUME/2))):
             if ((self._volume - volume)< 0):
